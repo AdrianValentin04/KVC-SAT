@@ -1,0 +1,76 @@
+import fileinput
+
+K = input() # numarul K din enunt
+K = int(K)
+N = input() # numarul de noduri din G
+N = int(N)
+M = input() # numarul de muchii
+M = int(M)
+
+# declaram o matrice de 0
+muchii = [[0 for i in range(N)] for j in range(N)]
+
+# salvam muchiile in matricea de adiacenta
+for i in range(M):
+        m = input() # muchia ca string
+        noduri = m.split(" ")
+        noduri[0] = int(noduri[0])
+        noduri[1] = int(noduri[1])
+        muchii[noduri[0] - 1][noduri[1] - 1] = 1
+
+string_final = ""
+number = 0
+
+# fac prima parte din formula
+for i in range(N):
+    for j in range(N):
+        s = "("
+        if(muchii[i][j] == 1):
+            for l in range(K):
+                number = (i + 1) * K - l
+                s = s + str(number) + "V"
+                number = (j + 1) * K - l
+                s = s + str(number) + "V"
+            s = s[:-1]
+            s = s + ")"
+            string_final = string_final + s + "^"
+
+# fac a doua parte din formula
+for i in range(K):
+    s = "("
+    for j in range(N):
+        s = s + str(K * (j + 1) - i)
+        s = s + "V"
+    s = s[:-1]
+    s = s + ")" + "^"
+    string_final = string_final + s
+
+s = ""
+
+# fac a treia parte din formula
+nod = 1
+
+for i in range(K):
+    for nod in range(1, N + 1):
+        for j in range(nod + 1, N + 1):
+            s = "("
+            s = s + "~" + str(nod * K - i) + "V"
+            s = s + "~" + str(j * K - i)
+            s = s + ")^"
+            string_final = string_final + s
+
+s = ""
+
+# aici este ultima parte din formula
+for i in range(N):
+    s = "("
+    for j in range(K):
+        s = s + "~" + str((i + 1)  * K - j) + "V"  
+    s = s[:-1]
+    s = s + ")^"
+    string_final = string_final + s
+    s = ""
+
+# stergem caracterul "^" de la finalul stringului de output
+string_final = string_final[:-1]
+print(string_final)
